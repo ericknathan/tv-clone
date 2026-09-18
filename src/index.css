@@ -1,1 +1,25 @@
 @import "tailwindcss";
+
+@theme {
+  --color-fundo: #0b0b0d;
+  --color-superficie: #17171a;
+  --color-borda: #2a2a2f;
+  --color-destaque: #f5c518;
+  --color-texto: #f4f4f5;
+  --color-texto-suave: #a1a1aa;
+}
+
+body {
+  background-color: var(--color-fundo);
+  color: var(--color-texto);
+}
+
+/* Contorno de foco para quem navega pelo teclado. Os campos de texto têm o seu
+   próprio destaque (borda + anel), por isso não entram nesta regra. */
+@layer base {
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-destaque);
+    outline-offset: 2px;
+  }
+}

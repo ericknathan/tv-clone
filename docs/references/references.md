@@ -20,7 +20,9 @@ A busca ("got") retorna uma lista única com filmes e séries misturados, cada c
 Resultado de busca único (filmes e séries juntos) com card compacto: pôster + título + ano + tipo + nota, e um botão de ação rápida de "adicionar" diretamente no card, sem precisar abrir os detalhes.
 
 ### Como será adaptado? (F01 — Descoberta)
-Na página `SearchResults`, o `TitleCard` vai reaproveitar esse layout (pôster, título, ano, tipo, nota do TMDB) e ganhar um botão de ação rápida que abre o `ListPicker` direto no card, sem depender de entrar em `TitleDetails` primeiro.
+O `TitleCard` reaproveita esse layout na Home e em `SearchResults` (pôster, título, ano, tipo e nota do TMDB) e tem o mesmo botão de ação rápida: um "+" que adiciona o título à lista "Quero assistir" e vira um check quando ele já está lá, exatamente como na referência. O botão também desfaz a ação: clicando de novo o título sai da lista, e o ícone vira um "X" ao passar o mouse para deixar isso claro.
+
+Duas diferenças conscientes em relação ao print: o elenco **não** aparece no card, porque os endpoints de busca e de populares do TMDB não retornam elenco — buscá-lo exigiria uma requisição extra por card, então o elenco ficou só na página de detalhes (onde já vem junto com o resto). E o "+" adiciona direto na lista padrão em vez de abrir um seletor; escolher entre várias listas acontece no `ListPicker`, dentro dos detalhes.
 
 ## 3. Referência 02 — Perfil do usuário
 
@@ -58,7 +60,13 @@ O conceito central de várias listas nomeadas (não só uma "watchlist" genéric
 ### Como será adaptado? (F03 — Listas personalizadas)
 A página `Lists` vai adaptar essa ideia de abas para listas *criadas pelo próprio usuário* (em vez de fixas como "In Progress"/"Completed"), já que não fazemos acompanhamento de episódio a episódio. Cada lista mostra seus títulos com o mesmo card compacto da Referência 01, sem a barra de progresso de episódios (que depende de dado que não coletamos no MVP).
 
-## 5. Referências observadas e deixadas fora do escopo
+## 5. Padrão presente nas três referências — navegação inferior
+
+As telas de busca, perfil e acompanhamento (Referências 01, 02 e 03) têm em comum uma barra de navegação fixa no rodapé, com poucos itens representados por ícone + rótulo e o item atual destacado em amarelo.
+
+**Como foi adaptado:** no celular, os links de navegação saem do topo e viram o componente `BottomNav`, fixo na parte de baixo da tela, com Início, Listas e Perfil — a mesma lógica de ícone + rótulo e destaque do item ativo. Como o TV Clone é uma plataforma web (e não um app), a partir de telas maiores essa barra desaparece e a navegação volta para o `Header`, que é o padrão esperado no desktop. O campo de busca fica no `Header` nos dois tamanhos, em vez de ocupar um item da barra inferior como no app original.
+
+## 6. Referências observadas e deixadas fora do escopo
 
 As três telas abaixo também foram analisadas, mas mostram funcionalidades que já decidimos não incluir no MVP — estão aqui para documentar que a decisão foi consciente, não por desconhecimento do produto original.
 

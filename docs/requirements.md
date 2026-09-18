@@ -19,7 +19,7 @@ Uma plataforma web responsiva que consome a API do TMDB para exibir filmes e sé
 Ao final do projeto, o usuário deve conseguir:
 - Descobrir filmes e séries em destaque e buscar por título consumindo a API do TMDB.
 - Ver detalhes de um filme ou série (sinopse, elenco, avaliação média do TMDB).
-- Avaliar um filme ou série com nota (1 a 5) e comentário opcional, e ver suas avaliações depois.
+- Avaliar um filme ou série com nota (0,5 a 5, com meia estrela) e comentário opcional, e ver suas avaliações depois.
 - Criar listas personalizadas e adicionar/remover filmes e séries nelas.
 
 ## 3. Funcionalidades
@@ -44,10 +44,12 @@ Ao final do projeto, o usuário deve conseguir:
 
 ### F02 — Avaliação de conteúdo
 
-**Descrição:** Na página de detalhes de um filme ou série, o usuário pode dar uma nota de 1 a 5 estrelas e escrever um comentário opcional. As avaliações feitas pelo usuário ficam salvas no navegador e podem ser revisitadas na página de perfil.
+**Descrição:** Na página de detalhes de um filme ou série, o usuário pode dar uma nota de 0,5 a 5 estrelas (aceitando meia estrela) e escrever um comentário opcional. As avaliações feitas pelo usuário ficam salvas no navegador e podem ser revisitadas na página de perfil.
 
 **Critérios de aceitação:**
-- [ ] A página de detalhes exibe um seletor de nota (1 a 5) e um campo de comentário.
+- [ ] A página de detalhes exibe um seletor de nota (0,5 a 5, em passos de meia estrela) e um campo de comentário.
+- [ ] Ao passar o mouse sobre as estrelas, a nota que será selecionada aparece preenchida e escrita ao lado ("4,5 de 5").
+- [ ] Quando o título já tem avaliação, o botão do formulário mostra "Atualizar avaliação" em vez de "Salvar avaliação".
 - [ ] Ao salvar, a avaliação é persistida (localStorage) e associada ao título avaliado.
 - [ ] Se o título já foi avaliado antes, a nota e o comentário salvos aparecem preenchidos ao reabrir a página.
 - [ ] A página de perfil lista todas as avaliações já feitas pelo usuário, com nota, comentário e link para o título.
@@ -67,6 +69,8 @@ Ao final do projeto, o usuário deve conseguir:
 **Critérios de aceitação:**
 - [ ] O usuário pode criar uma nova lista informando um nome.
 - [ ] A partir da página de detalhes de um título, o usuário pode adicionar/remover esse título de uma ou mais listas existentes.
+- [ ] O botão "+" nos cards da Home e da busca adiciona o título à lista padrão "Quero assistir" (criada na primeira vez) e vira um check quando o título já está nela.
+- [ ] Clicar no mesmo botão de novo remove o título da lista padrão, sem precisar sair da página.
 - [ ] A página "Minhas Listas" exibe todas as listas criadas e a quantidade de títulos em cada uma.
 - [ ] Ao abrir uma lista, são exibidos todos os títulos adicionados a ela, com opção de remover.
 - [ ] Se o usuário ainda não criou nenhuma lista, é exibido um estado vazio com uma chamada para ação para criar a primeira lista.
