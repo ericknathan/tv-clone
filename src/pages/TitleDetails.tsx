@@ -1,7 +1,7 @@
 import { ImageOff, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { EmptyState } from "../components/EmptyState";
@@ -10,10 +10,11 @@ import { RatingStars } from "../components/RatingStars";
 import { TitleDetailsSkeleton } from "../components/TitleDetailsSkeleton";
 import { useAppData } from "../context/AppDataContext";
 import { getDetalhes } from "../services/tmdb";
-import type { MediaType, TitleDetail } from "../types";
+import type { MediaType, TitleDetail, TitleSummary } from "../types";
 
 export function TitleDetails() {
   const { mediaType, id } = useParams();
+  const location = useLocation();
 
   // Os parâmetros da URL chegam como texto, então normalizamos antes de usar.
   const tipo: MediaType = mediaType === "tv" ? "tv" : "movie";
@@ -33,6 +34,12 @@ export function TitleDetails() {
   const jaAvaliado = reviews.some(
     (avaliacao) => avaliacao.mediaType === tipo && avaliacao.titleId === idNumerico,
   );
+
+  // Quem chega clicando em um card manda junto o resumo do título. Com isso o pôster
+  // já aparece enquanto o TMDB responde — e é o que permite a imagem do card crescer
+  // até aqui na transição, em vez de virar um retângulo cinza.
+  const estadoDaNavegacao = location.state as { title?: TitleSummary } | null;
+  const resumo: TitleDetail | TitleSummary | undefined = detalhes || estadoDaNavegacao?.title;
 
   // Busca os detalhes do título no TMDB.
   useEffect(() => {
@@ -78,7 +85,7 @@ export function TitleDetails() {
 
   function handleSalvar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
-    if (!detalhes) return;
+    if (!resumo) return;
 
     if (nota === 0) {
       toast.error("Escolha uma nota de 0,5 a 5 estrelas antes de salvar.");
@@ -87,12 +94,12 @@ export function TitleDetails() {
 
     saveReview(
       {
-        id: detalhes.id,
-        mediaType: detalhes.mediaType,
-        name: detalhes.name,
-        year: detalhes.year,
-        posterUrl: detalhes.posterUrl,
-        voteAverage: detalhes.voteAverage,
+        id: resumo.id,
+        mediaType: resumo.mediaType,
+        name: resumo.name,
+        year: resumo.year,
+        posterUrl: resumo.posterUrl,
+        voteAverage: resumo.voteAverage,
       },
       nota,
       comentario.trim(),
@@ -100,8 +107,8 @@ export function TitleDetails() {
 
     toast.success(
       jaAvaliado
-        ? `Avaliação de ${detalhes.name} atualizada!`
-        : `Avaliação de ${detalhes.name} salva!`,
+        ? `Avaliação de ${resumo.name} atualizada!`
+        : `Avaliação de ${resumo.name} salva!`,
     );
   }
 
@@ -117,21 +124,27 @@ export function TitleDetails() {
     );
   }
 
-  if (carregando || !detalhes) {
+  // Sem nem o resumo da navegação, não há o que mostrar antes da API responder.
+  if (!resumo) {
     return <TitleDetailsSkeleton />;
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6" aria-busy={carregando}>
       <div className="flex flex-col gap-4 sm:flex-row">
-        {detalhes.posterUrl ? (
+        {/* O mesmo nome usado no card faz o pôster crescer do card até aqui. */}
+        {resumo.posterUrl ? (
           <img
-            src={detalhes.posterUrl}
-            alt={detalhes.name}
+            src={resumo.posterUrl}
+            alt={resumo.name}
+            style={{ viewTransitionName: "poster-do-titulo" }}
             className="h-72 w-48 shrink-0 rounded-xl object-cover"
           />
         ) : (
-          <div className="flex h-72 w-48 shrink-0 items-center justify-center rounded-xl bg-superficie">
+          <div
+            style={{ viewTransitionName: "poster-do-titulo" }}
+            className="flex h-72 w-48 shrink-0 items-center justify-center rounded-xl bg-superficie"
+          >
             <ImageOff className="size-8 text-texto-suave" />
           </div>
         )}
@@ -139,30 +152,42 @@ export function TitleDetails() {
         <div className="flex flex-col gap-3">
           <div>
             <h1 className="text-2xl font-bold">
-              {detalhes.name} {detalhes.year && <span className="text-texto-suave">{detalhes.year}</span>}
+              {resumo.name} {resumo.year && <span className="text-texto-suave">{resumo.year}</span>}
             </h1>
 
             <p className="text-sm font-medium text-destaque">
-              {detalhes.mediaType === "tv" ? "Série" : "Filme"}
+              {resumo.mediaType === "tv" ? "Série" : "Filme"}
             </p>
           </div>
 
           <p className="flex items-center gap-1 text-sm text-texto-suave">
             <Star className="size-4 fill-destaque text-destaque" />
-            {detalhes.voteAverage.toFixed(1)} — nota do TMDB
+            {resumo.voteAverage.toFixed(1)} — nota do TMDB
           </p>
 
-          {detalhes.genres.length > 0 && (
-            <p className="text-sm text-texto-suave">{detalhes.genres.join(" • ")}</p>
-          )}
+          {detalhes ? (
+            <>
+              {detalhes.genres.length > 0 && (
+                <p className="text-sm text-texto-suave">{detalhes.genres.join(" • ")}</p>
+              )}
 
-          <p className="max-w-2xl text-sm">{detalhes.overview}</p>
+              <p className="max-w-2xl text-sm">{detalhes.overview}</p>
 
-          {detalhes.cast.length > 0 && (
-            <p className="text-sm text-texto-suave">
-              <span className="font-semibold text-texto">Elenco: </span>
-              {detalhes.cast.join(", ")}
-            </p>
+              {detalhes.cast.length > 0 && (
+                <p className="text-sm text-texto-suave">
+                  <span className="font-semibold text-texto">Elenco: </span>
+                  {detalhes.cast.join(", ")}
+                </p>
+              )}
+            </>
+          ) : (
+            // Gêneros, sinopse e elenco ainda estão vindo do TMDB.
+            <div aria-hidden="true" className="flex max-w-2xl animate-pulse flex-col gap-2 pt-1">
+              <div className="h-3 w-40 rounded bg-superficie" />
+              <div className="h-3 w-full rounded bg-superficie" />
+              <div className="h-3 w-full rounded bg-superficie" />
+              <div className="h-3 w-4/5 rounded bg-superficie" />
+            </div>
           )}
         </div>
       </div>
@@ -194,12 +219,12 @@ export function TitleDetails() {
 
         <ListPicker
           title={{
-            id: detalhes.id,
-            mediaType: detalhes.mediaType,
-            name: detalhes.name,
-            year: detalhes.year,
-            posterUrl: detalhes.posterUrl,
-            voteAverage: detalhes.voteAverage,
+            id: resumo.id,
+            mediaType: resumo.mediaType,
+            name: resumo.name,
+            year: resumo.year,
+            posterUrl: resumo.posterUrl,
+            voteAverage: resumo.voteAverage,
           }}
         />
       </div>

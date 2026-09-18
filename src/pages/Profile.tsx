@@ -36,7 +36,7 @@ export function Profile() {
           title="Você ainda não avaliou nada"
           description="Abra um filme ou série, dê sua nota e o registro aparece aqui."
           actionLabel="Descobrir títulos"
-          onAction={() => navegar("/")}
+          onAction={() => navegar("/", { viewTransition: true })}
         />
       ) : (
         <ul className="flex flex-col gap-5">

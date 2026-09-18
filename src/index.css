@@ -14,6 +14,27 @@ body {
   color: var(--color-texto);
 }
 
+/* Transição entre as telas: a troca de página faz um fade rápido e o pôster do
+   título "viaja" do card até a página de detalhes. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+
+::view-transition-group(poster-do-titulo) {
+  animation-duration: 320ms;
+  animation-timing-function: ease-in-out;
+}
+
+/* Quem pediu menos animação no sistema não vê nenhuma delas. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* Contorno de foco para quem navega pelo teclado. Os campos de texto têm o seu
    próprio destaque (borda + anel), por isso não entram nesta regra. */
 @layer base {

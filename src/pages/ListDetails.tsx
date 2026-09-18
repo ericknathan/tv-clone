@@ -21,7 +21,7 @@ export function ListDetails() {
         title="Lista não encontrada"
         description="Essa lista não existe mais ou o endereço está incorreto."
         actionLabel="Ver minhas listas"
-        onAction={() => navegar("/listas")}
+        onAction={() => navegar("/listas", { viewTransition: true })}
       />
     );
   }
@@ -38,6 +38,7 @@ export function ListDetails() {
 
         <Link
           to="/listas"
+          viewTransition
           className="flex items-center gap-1 text-sm text-texto-suave transition-colors hover:text-texto"
         >
           <ArrowLeft className="size-4" />
@@ -50,7 +51,7 @@ export function ListDetails() {
           title="Lista vazia"
           description="Abra um filme ou série e adicione a esta lista para vê-lo aqui."
           actionLabel="Descobrir títulos"
-          onAction={() => navegar("/")}
+          onAction={() => navegar("/", { viewTransition: true })}
         />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2">

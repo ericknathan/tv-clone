@@ -14,29 +14,33 @@ export function Header() {
 
   function handleSearch(termo: string) {
     if (!termo) return;
-    navegar(`/buscar?q=${encodeURIComponent(termo)}`);
+    navegar(`/buscar?q=${encodeURIComponent(termo)}`, { viewTransition: true });
   }
 
   return (
     <header className="border-b border-borda bg-superficie">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:gap-6">
-        <Link to="/" className="text-lg font-bold text-destaque transition-opacity hover:opacity-80">
+        <Link
+          to="/"
+          viewTransition
+          className="text-lg font-bold text-destaque transition-opacity hover:opacity-80"
+        >
           TV Clone
         </Link>
 
         {/* No celular esta navegação dá lugar ao BottomNav. */}
         <nav className="hidden gap-4 text-sm sm:flex">
-          <NavLink to="/" end className={estiloDoLink}>
+          <NavLink to="/" end viewTransition className={estiloDoLink}>
             <House className="size-4" />
             Início
           </NavLink>
 
-          <NavLink to="/listas" className={estiloDoLink}>
+          <NavLink to="/listas" viewTransition className={estiloDoLink}>
             <ListPlus className="size-4" />
             Minhas listas
           </NavLink>
 
-          <NavLink to="/perfil" className={estiloDoLink}>
+          <NavLink to="/perfil" viewTransition className={estiloDoLink}>
             <User className="size-4" />
             Perfil
           </NavLink>

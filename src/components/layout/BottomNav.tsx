@@ -17,17 +17,17 @@ export function BottomNav() {
       aria-label="Navegação principal"
       className="fixed inset-x-0 bottom-0 z-10 flex border-t border-borda bg-superficie pb-[env(safe-area-inset-bottom)] sm:hidden"
     >
-      <NavLink to="/" end className={estiloDoItem}>
+      <NavLink to="/" end viewTransition className={estiloDoItem}>
         <House className="size-5" />
         Início
       </NavLink>
 
-      <NavLink to="/listas" className={estiloDoItem}>
+      <NavLink to="/listas" viewTransition className={estiloDoItem}>
         <ListPlus className="size-5" />
         Listas
       </NavLink>
 
-      <NavLink to="/perfil" className={estiloDoItem}>
+      <NavLink to="/perfil" viewTransition className={estiloDoItem}>
         <User className="size-5" />
         Perfil
       </NavLink>

@@ -54,7 +54,7 @@ export function Lists() {
               key={lista.id}
               className="flex min-w-0 items-center justify-between gap-3 rounded-xl border border-borda bg-superficie p-4 transition-colors hover:border-destaque/60"
             >
-              <Link to={`/listas/${lista.id}`} className="group min-w-0 flex-1">
+              <Link to={`/listas/${lista.id}`} viewTransition className="group min-w-0 flex-1">
                 <p className="truncate font-semibold transition-colors group-hover:text-destaque">
                   {lista.name}
                 </p>

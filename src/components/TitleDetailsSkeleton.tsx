@@ -3,7 +3,11 @@ export function TitleDetailsSkeleton() {
   return (
     <div aria-hidden="true" className="flex animate-pulse flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="h-72 w-48 shrink-0 rounded-xl bg-superficie" />
+        {/* Mesmo nome do pôster: quem abre a página direto pela URL também vê a transição. */}
+        <div
+          style={{ viewTransitionName: "poster-do-titulo" }}
+          className="h-72 w-48 shrink-0 rounded-xl bg-superficie"
+        />
 
         <div className="flex flex-1 flex-col gap-3">
           <div className="h-7 w-2/3 rounded bg-superficie" />

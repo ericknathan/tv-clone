@@ -1,5 +1,5 @@
 import { Check, ImageOff, Plus, Star, Trash2, X } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useViewTransitionState } from "react-router";
 
 import type { TitleSummary } from "../types";
 
@@ -18,20 +18,34 @@ export function TitleCard({ title, onQuickToggle, isAdded = false, onRemove }: T
     ? `Remover ${title.name} de Quero assistir`
     : `Adicionar ${title.name} em Quero assistir`;
 
+  const endereco = `/titulo/${title.mediaType}/${title.id}`;
+
+  // Verdadeiro só enquanto a navegação para este card está acontecendo. Assim apenas
+  // o pôster clicado recebe o nome da transição, e não os 40 cards da página.
+  const emTransicao = useViewTransitionState(endereco);
+  const estiloDoPoster = emTransicao ? { viewTransitionName: "poster-do-titulo" } : undefined;
+
   return (
     <div className="flex min-w-0 items-center gap-3 rounded-xl border border-borda bg-superficie p-3 transition-colors hover:border-destaque/60">
+      {/* O resumo viaja junto na navegação para a página de detalhes já ter o pôster. */}
       <Link
-        to={`/titulo/${title.mediaType}/${title.id}`}
+        to={endereco}
+        state={{ title }}
+        viewTransition
         className="group flex min-w-0 flex-1 items-center gap-3"
       >
         {title.posterUrl ? (
           <img
             src={title.posterUrl}
             alt={title.name}
+            style={estiloDoPoster}
             className="h-24 w-16 shrink-0 rounded-md object-cover"
           />
         ) : (
-          <div className="flex h-24 w-16 shrink-0 items-center justify-center rounded-md bg-fundo">
+          <div
+            style={estiloDoPoster}
+            className="flex h-24 w-16 shrink-0 items-center justify-center rounded-md bg-fundo"
+          >
             <ImageOff className="size-5 text-texto-suave" />
           </div>
         )}

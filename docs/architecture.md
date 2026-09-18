@@ -78,6 +78,8 @@ A navegação muda conforme a largura da tela: no desktop os links ficam no `Hea
 
 O estado de carregamento é sempre representado por skeletons com o formato do conteúdo que vai aparecer, e não por um indicador genérico: como o placeholder ocupa o mesmo espaço do card real, a página não muda de altura quando os dados do TMDB chegam.
 
+A troca de página usa a View Transitions API, ligada pelo `viewTransition` dos links do React Router. O pôster do card e o pôster da página de detalhes compartilham o mesmo `view-transition-name`, então a imagem cresce de um lugar para o outro em vez de sumir e reaparecer. Para isso funcionar, o `TitleCard` manda o `TitleSummary` junto na navegação (`state`), e `TitleDetails` usa esse resumo para desenhar o pôster e o título na hora, deixando o skeleton só para a sinopse e o elenco, que dependem da resposta da API. O `useViewTransitionState` garante que só o card clicado receba o nome da transição — se todos recebessem, o navegador teria que fotografar os 40 cards da página a cada navegação.
+
 As respostas a uma ação do usuário (avaliação salva, tentativa de salvar sem nota) aparecem como toast do `sonner`, disparado pelo `toast.success`/`toast.error` no próprio manipulador do formulário. Já as falhas que impedem a página inteira de funcionar — como o TMDB fora do ar — continuam no `EmptyState`, porque nesse caso não há conteúdo para mostrar atrás do aviso e o usuário precisa do botão de tentar novamente.
 
 ## 5. Estado da Aplicação
