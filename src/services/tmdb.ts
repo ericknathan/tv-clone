@@ -9,6 +9,8 @@ import type {
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_URL = "https://image.tmdb.org/t/p/w342";
 const LOGO_URL = "https://image.tmdb.org/t/p/w92";
+// A imagem de fundo entra desfocada, então não precisa de resolução alta.
+const BACKDROP_URL = "https://image.tmdb.org/t/p/w780";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 /** O TMDB devolve os serviços por país; o TV Clone mostra os do Brasil. */
@@ -38,6 +40,7 @@ type TmdbItem = {
   release_date?: string;
   first_air_date?: string;
   poster_path?: string | null;
+  backdrop_path?: string | null;
   vote_average?: number;
   media_type?: string;
   overview?: string;
@@ -85,6 +88,7 @@ function paraResumo(item: TmdbItem, mediaType: MediaType): TitleSummary {
     name: item.title || item.name || "Sem título",
     year: data.slice(0, 4),
     posterUrl: item.poster_path ? IMAGE_URL + item.poster_path : null,
+    backdropUrl: item.backdrop_path ? BACKDROP_URL + item.backdrop_path : null,
     voteAverage: item.vote_average || 0,
   };
 }

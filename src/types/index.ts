@@ -11,6 +11,8 @@ export type TitleSummary = {
   name: string;
   year: string;
   posterUrl: string | null;
+  /** Imagem larga do título, usada como fundo colorido na página de detalhes. */
+  backdropUrl: string | null;
   /** Nota média do TMDB, de 0 a 10. */
   voteAverage: number;
 };

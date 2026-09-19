@@ -64,7 +64,7 @@ export function WhereToWatch({ providers }: WhereToWatchProps) {
                     </span>
                   )}
 
-                  {provedor.name}
+                  {provedor.name.replace("with Ads", "com anúncios")}
                 </li>
               ))}
             </ul>

@@ -9,7 +9,8 @@ import { Header } from "./components/layout/Header";
 export function App() {
   return (
     // O espaço embaixo no celular evita que o BottomNav cubra o conteúdo.
-    <div className="flex min-h-screen flex-col pb-16 sm:pb-0">
+    // O overflow-x segura o fundo dos detalhes, que é mais largo que a coluna de conteúdo.
+    <div className="flex min-h-screen flex-col overflow-x-hidden pb-16 sm:pb-0">
       <Header />
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">

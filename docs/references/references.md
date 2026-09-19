@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-As referências abaixo são prints reais do próprio TV Time (o produto original que estamos recriando), coletados antes do encerramento do app. Servem para justificar quais padrões de interface serão reaproveitados no MVP (descoberta, avaliação e listas) e quais foram conscientemente deixados de fora do escopo, conforme já registrado em `docs/requirements.md`.
+As três primeiras referências são prints reais do próprio TV Time (o produto original que estamos recriando), coletados antes do encerramento do app, e justificam os padrões de interface reaproveitados no MVP (descoberta, avaliação e listas). As duas últimas vêm de fora do universo de filmes e séries — Spotify e Netflix — e sustentam decisões visuais e de movimento da aplicação.
 
 ## 2. Referência 01 — Busca de conteúdo
 
@@ -66,24 +66,47 @@ As telas de busca, perfil e acompanhamento (Referências 01, 02 e 03) têm em co
 
 **Como foi adaptado:** no celular, os links de navegação saem do topo e viram o componente `BottomNav`, fixo na parte de baixo da tela, com Início, Listas e Perfil — a mesma lógica de ícone + rótulo e destaque do item ativo. Como o TV Clone é uma plataforma web (e não um app), a partir de telas maiores essa barra desaparece e a navegação volta para o `Header`, que é o padrão esperado no desktop. O campo de busca fica no `Header` nos dois tamanhos, em vez de ocupar um item da barra inferior como no app original.
 
-## 6. Referências observadas e deixadas fora do escopo
+## 6. Referência 07 — Spotify (fundo colorido no topo)
 
-As três telas abaixo também foram analisadas, mas mostram funcionalidades que já decidimos não incluir no MVP — estão aqui para documentar que a decisão foi consciente, não por desconhecimento do produto original.
+### Fonte
+Spotify web player, tela de uma playlist (ex.: "Release Radar").
 
-### Referência 04 — Lista de episódios por temporada
+### Imagem
 
-![Referência 04](./imagens/referencia-04.webp)
+![Referência 07](./imagens/referencia-07.png)
 
-Mostra o controle de episódios assistidos, agrupado por temporada, com check individual por episódio. Não será replicado porque o MVP trata avaliação e listas no nível de título (filme/série), não de episódio — acompanhar episódio a episódio está listado em "Fora do Escopo".
+### O que observamos?
+O topo da página ganha um fundo na cor dominante da capa, que vai perdendo intensidade até se fundir com o fundo escuro do app. Isso dá identidade visual para cada playlist sem precisar de nenhum elemento novo na interface.
 
-### Referência 05 — Seguir atores
+### O que vamos aproveitar?
+A ideia de tingir o topo da página com a cor do próprio conteúdo, em vez de usar sempre o mesmo fundo neutro.
 
-![Referência 05](./imagens/referencia-05.webp)
+### Como foi adaptado? (F01/F02 — página de detalhes)
+Na página de detalhes, o componente `TitleBackdrop` usa o banner do título (`backdrop_path` do TMDB) bem desfocado, com saturação e brilho aumentados, e um degradê por cima que fecha na cor de fundo do app. O resultado é o mesmo do Spotify — cada filme ou série tem seu próprio tom no topo — só que a cor vem da imagem em vez de uma paleta extraída.
 
-Mostra uma lista de atores seguidos pelo usuário. Não será replicado porque comunidade/seguir pessoas ou atores está listado em "Fora do Escopo" do MVP.
+Consequência conhecida: títulos com banner escuro (Game of Thrones, por exemplo) rendem um tom bem discreto. O Spotify tem o mesmo comportamento com capas escuras, então mantivemos assim em vez de forçar uma cor artificial.
 
-### Referência 06 — Lançamentos futuros (Upcoming)
+## 7. Referência 08 — Netflix (transição das imagens entre telas)
 
-![Referência 06](./imagens/referencia-06.webp)
+### Fonte
+Netflix web, tela inicial.
 
-Mostra um calendário de próximos episódios/lançamentos agrupado por data, com informações de elenco. Não será replicado porque notificações de lançamento e calendário estão listados em "Fora do Escopo" do MVP.
+### Imagem
+
+![Referência 08](./imagens/referencia-08.png)
+
+### O que observamos?
+A home é formada por trilhos horizontais em que a arte do título é praticamente o único elemento do card. Ao abrir um título, é essa mesma arte que cresce e vira o topo da tela de detalhes: a imagem funciona como fio condutor entre as duas telas, em vez de uma troca seca de página.
+
+### O que vamos aproveitar?
+Usar a imagem do próprio título como elo entre a listagem e os detalhes, para o usuário não perder de vista o que ele acabou de clicar.
+
+### Como foi adaptado? (F01 — Descoberta)
+O TV Clone usa a View Transitions API: o pôster do `TitleCard` e o pôster da página de detalhes compartilham o mesmo `view-transition-name`, então a imagem cresce de um lugar para o outro em vez de sumir e reaparecer. A transição é ligada pelo `viewTransition` dos links do React Router, e o `useViewTransitionState` garante que só o card clicado entre na animação — se todos os cards da página entrassem, o navegador precisaria fotografar os 40 de uma vez.
+
+Duas decisões de implementação que a referência exigiu:
+
+- O card manda o resumo do título junto na navegação (`state`), porque sem isso a página de detalhes ainda estaria no skeleton quando a animação começa — e sem imagem do outro lado não existe transição, só um desaparecimento.
+- Quem prefere menos animação no sistema (`prefers-reduced-motion`) não vê nenhuma delas.
+
+Diferença em relação ao print: na Netflix o card é só a arte em formato paisagem; aqui o card também carrega título, ano, tipo e nota (herdados da Referência 01, do próprio TV Time), então o que viaja entre as telas é o pôster em retrato.

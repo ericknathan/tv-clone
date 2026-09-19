@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { EmptyState } from "../components/EmptyState";
 import { ListPicker } from "../components/ListPicker";
 import { RatingStars } from "../components/RatingStars";
+import { TitleBackdrop } from "../components/TitleBackdrop";
 import { TitleDetailsSkeleton } from "../components/TitleDetailsSkeleton";
 import { WhereToWatch } from "../components/WhereToWatch";
 import { WhereToWatchSkeleton } from "../components/WhereToWatchSkeleton";
@@ -114,6 +115,7 @@ export function TitleDetails() {
         name: resumo.name,
         year: resumo.year,
         posterUrl: resumo.posterUrl,
+        backdropUrl: resumo.backdropUrl,
         voteAverage: resumo.voteAverage,
       },
       nota,
@@ -145,7 +147,9 @@ export function TitleDetails() {
   }
 
   return (
-    <div className="flex flex-col gap-6" aria-busy={carregando}>
+    <div className="relative flex flex-col gap-6" aria-busy={carregando}>
+      <TitleBackdrop imageUrl={resumo.backdropUrl} />
+
       <div className="flex flex-col gap-4 sm:flex-row">
         {/* O mesmo nome usado no card faz o pôster crescer do card até aqui. */}
         {resumo.posterUrl ? (
@@ -244,6 +248,7 @@ export function TitleDetails() {
             name: resumo.name,
             year: resumo.year,
             posterUrl: resumo.posterUrl,
+            backdropUrl: resumo.backdropUrl,
             voteAverage: resumo.voteAverage,
           }}
         />

@@ -16,6 +16,7 @@ src/
 │   │   ├── BottomNav.tsx
 │   │   ├── Footer.tsx
 │   │   └── ListsLayout.tsx
+│   ├── TitleBackdrop.tsx
 │   ├── TitleCard.tsx
 │   ├── TitleCardSkeleton.tsx
 │   ├── WhereToWatch.tsx
@@ -69,6 +70,7 @@ A navegação muda conforme a largura da tela: no desktop os links ficam no `Hea
 | Footer | Créditos do projeto e da API | — |
 | ListsLayout | Layout aninhado das páginas de listas | — |
 | SearchBar | Campo de busca controlado que devolve o termo digitado | `onSearch: (termo: string) => void`, `initialTerm?: string` |
+| TitleBackdrop | Fundo colorido do topo da página de detalhes, feito com o banner desfocado | `imageUrl: string \| null` |
 | TitleCard | Card de um filme/série: pôster, nome, ano, tipo e nota do TMDB | `title: TitleSummary`, `onQuickToggle?: (title) => void`, `isAdded?: boolean`, `onRemove?: () => void` |
 | RatingStars | Seletor/exibição da nota do usuário (0,5 a 5 estrelas, com meia estrela) | `value: number`, `onChange?: (nota) => void`, `readOnly?: boolean` |
 | ListPicker | Marca em quais listas o título está e permite criar uma nova | `title: TitleSummary` |
