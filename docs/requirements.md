@@ -6,13 +6,13 @@
 TV Clone
 
 ### Problema
-O TV Time encerrou suas atividades em julho de 2026, deixando seus usuários sem uma plataforma para descobrir o que assistir, avaliar filmes e séries e organizar o que já viram ou pretendem ver. Concorrentes como o SofaTime tentam preencher esse vácuo, mas o mercado ainda carece de uma opção web simples e responsiva com esse conjunto de funcionalidades.
+O TV Time encerrou suas atividades em julho de 2026, deixando seus usuários sem uma plataforma para descobrir o que assistir, avaliar filmes e séries, organizar o que já viram ou pretendem ver e saber em qual serviço de streaming cada título está. Concorrentes como o SofaTime tentam preencher esse vácuo, mas o mercado ainda carece de uma opção web simples e responsiva com esse conjunto de funcionalidades.
 
 ### Público
 Pessoas que assistem regularmente filmes e séries e querem lembrar o que já viram, decidir o que assistir a seguir e registrar sua opinião sobre os títulos — sem depender de um aplicativo de celular.
 
 ### Proposta de solução
-Uma plataforma web responsiva que consome a API do TMDB para exibir filmes e séries em cartaz e populares, permite ao usuário avaliar títulos com nota e comentário, e organizar títulos em listas personalizadas (ex: "Quero assistir", "Favoritos"), tudo salvo localmente no navegador.
+Uma plataforma web responsiva que consome a API do TMDB para exibir filmes e séries em cartaz e populares, mostrar em quais serviços de streaming cada título está disponível no Brasil, permitir ao usuário avaliar títulos com nota e comentário, e organizar títulos em listas personalizadas (ex: "Quero assistir", "Favoritos") — as avaliações e listas ficam salvas no navegador.
 
 ## 2. Objetivo do MVP
 
@@ -21,6 +21,7 @@ Ao final do projeto, o usuário deve conseguir:
 - Ver detalhes de um filme ou série (sinopse, elenco, avaliação média do TMDB).
 - Avaliar um filme ou série com nota (0,5 a 5, com meia estrela) e comentário opcional, e ver suas avaliações depois.
 - Criar listas personalizadas e adicionar/remover filmes e séries nelas.
+- Ver em quais serviços de streaming o título está disponível no Brasil.
 
 ## 3. Funcionalidades
 
@@ -50,6 +51,7 @@ Ao final do projeto, o usuário deve conseguir:
 - [ ] A página de detalhes exibe um seletor de nota (0,5 a 5, em passos de meia estrela) e um campo de comentário.
 - [ ] Ao passar o mouse sobre as estrelas, a nota que será selecionada aparece preenchida e escrita ao lado ("4,5 de 5").
 - [ ] Quando o título já tem avaliação, o botão do formulário mostra "Atualizar avaliação" em vez de "Salvar avaliação".
+- [ ] O botão fica desabilitado enquanto não houver nota escolhida e quando nada mudou em relação à avaliação já salva, com uma linha explicando o motivo.
 - [ ] Ao salvar, a avaliação é persistida (localStorage) e associada ao título avaliado.
 - [ ] Se o título já foi avaliado antes, a nota e o comentário salvos aparecem preenchidos ao reabrir a página.
 - [ ] A página de perfil lista todas as avaliações já feitas pelo usuário, com nota, comentário e link para o título.
@@ -67,7 +69,7 @@ Ao final do projeto, o usuário deve conseguir:
 **Descrição:** O usuário pode criar listas próprias (ex: "Quero assistir", "Maratona de fim de semana"), adicionar filmes e séries a essas listas a partir da página de detalhes, e visualizar/gerenciar suas listas em uma página dedicada.
 
 **Critérios de aceitação:**
-- [ ] O usuário pode criar uma nova lista informando um nome.
+- [ ] O usuário pode criar uma nova lista informando um nome. O botão de criar fica desabilitado enquanto o campo estiver vazio (ou só com espaços).
 - [ ] A partir da página de detalhes de um título, o usuário pode adicionar/remover esse título de uma ou mais listas existentes.
 - [ ] O botão "+" nos cards da Home e da busca adiciona o título à lista padrão "Quero assistir" (criada na primeira vez) e vira um check quando o título já está nela.
 - [ ] Clicar no mesmo botão de novo remove o título da lista padrão, sem precisar sair da página.
@@ -82,10 +84,27 @@ Ao final do projeto, o usuário deve conseguir:
 - [x] Vazio
 - [ ] Erro
 
+### F04 — Onde assistir
+
+**Descrição:** Na página de detalhes, o usuário vê em quais serviços o título está disponível no Brasil, separados entre assinatura, aluguel e compra. Os dados vêm do endpoint `/watch/providers` do TMDB (que por sua vez usa o JustWatch).
+
+**Critérios de aceitação:**
+- [ ] A página de detalhes mostra uma seção "Onde assistir no Brasil" com o logo e o nome de cada serviço.
+- [ ] Os serviços aparecem agrupados por forma de acesso: na assinatura, alugar e comprar.
+- [ ] Quando o TMDB não tem informação de streaming do título para o Brasil, a seção explica isso em vez de aparecer vazia.
+- [ ] Existe um link para a página do TMDB com todas as opções da região.
+- [ ] A origem dos dados (JustWatch, via TMDB) está indicada na tela.
+
+**Estados:**
+- [x] Inicial
+- [x] Carregando
+- [x] Sucesso
+- [x] Vazio
+- [x] Erro
+
 ## 4. Fora do Escopo
 
 - Autenticação/login de usuários e contas na nuvem (dados ficam apenas no navegador do usuário, via localStorage).
 - Comunidade e discussão entre usuários (fórum, comentários públicos, seguir outros perfis).
-- Onde assistir (integração com provedores de streaming por região).
 - Notificações de novos episódios/lançamentos.
 - Estatísticas avançadas de consumo (tempo total assistido, gráficos, etc.).

@@ -84,7 +84,8 @@ export function ListPicker({ title }: { title: TitleSummary }) {
 
         <button
           type="submit"
-          className="cursor-pointer rounded-lg bg-destaque px-3 py-2 text-sm font-semibold text-fundo transition-opacity hover:opacity-90"
+          disabled={novaLista.trim() === ""}
+          className="cursor-pointer rounded-lg bg-destaque px-3 py-2 text-sm font-semibold text-fundo transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:opacity-40"
         >
           Criar
         </button>

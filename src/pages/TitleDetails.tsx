@@ -8,6 +8,8 @@ import { EmptyState } from "../components/EmptyState";
 import { ListPicker } from "../components/ListPicker";
 import { RatingStars } from "../components/RatingStars";
 import { TitleDetailsSkeleton } from "../components/TitleDetailsSkeleton";
+import { WhereToWatch } from "../components/WhereToWatch";
+import { WhereToWatchSkeleton } from "../components/WhereToWatchSkeleton";
 import { useAppData } from "../context/AppDataContext";
 import { getDetalhes } from "../services/tmdb";
 import type { MediaType, TitleDetail, TitleSummary } from "../types";
@@ -31,9 +33,22 @@ export function TitleDetails() {
   const [comentario, setComentario] = useState("");
 
   // Se já existe avaliação salva, o formulário está editando em vez de criar.
-  const jaAvaliado = reviews.some(
+  const avaliacaoSalva = reviews.find(
     (avaliacao) => avaliacao.mediaType === tipo && avaliacao.titleId === idNumerico,
   );
+  const jaAvaliado = Boolean(avaliacaoSalva);
+
+  // Sem nota não há o que salvar; e se nada mudou em relação ao que já está guardado,
+  // não há o que atualizar. Nos dois casos o botão fica desabilitado.
+  const semNota = nota === 0;
+  const semMudanca =
+    avaliacaoSalva?.rating === nota && avaliacaoSalva?.comment === comentario.trim();
+
+  const avisoDoBotao = semNota
+    ? "Escolha uma nota para salvar."
+    : semMudanca
+      ? "Nada mudou desde a última vez que você salvou."
+      : "";
 
   // Quem chega clicando em um card manda junto o resumo do título. Com isso o pôster
   // já aparece enquanto o TMDB responde — e é o que permite a imagem do card crescer
@@ -192,6 +207,8 @@ export function TitleDetails() {
         </div>
       </div>
 
+      {detalhes ? <WhereToWatch providers={detalhes.providers} /> : <WhereToWatchSkeleton />}
+
       <div className="grid gap-4 lg:grid-cols-2">
         <form
           onSubmit={handleSalvar}
@@ -209,9 +226,12 @@ export function TitleDetails() {
             className="rounded-lg border border-borda bg-fundo px-3 py-2 text-sm outline-none transition-colors placeholder:text-texto-suave focus:border-destaque focus:ring-2 focus:ring-destaque/30"
           />
 
+          {avisoDoBotao && <p className="text-xs text-texto-suave">{avisoDoBotao}</p>}
+
           <button
             type="submit"
-            className="cursor-pointer self-start rounded-lg bg-destaque px-4 py-2 text-sm font-semibold text-fundo transition-opacity hover:opacity-90"
+            disabled={semNota || semMudanca}
+            className="cursor-pointer self-start rounded-lg bg-destaque px-4 py-2 text-sm font-semibold text-fundo transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:opacity-40"
           >
             {jaAvaliado ? "Atualizar avaliação" : "Salvar avaliação"}
           </button>

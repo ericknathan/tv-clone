@@ -1,3 +1,5 @@
+import { WhereToWatchSkeleton } from "./WhereToWatchSkeleton";
+
 /** Espelha o layout da página de detalhes enquanto o TMDB responde. */
 export function TitleDetailsSkeleton() {
   return (
@@ -21,6 +23,8 @@ export function TitleDetailsSkeleton() {
           </div>
         </div>
       </div>
+
+      <WhereToWatchSkeleton />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="h-56 rounded-xl border border-borda bg-superficie" />

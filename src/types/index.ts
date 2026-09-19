@@ -15,11 +15,30 @@ export type TitleSummary = {
   voteAverage: number;
 };
 
+/** Um serviço onde dá para assistir ao título (Netflix, HBO Max, etc.). */
+export type WatchProvider = {
+  id: number;
+  name: string;
+  logoUrl: string | null;
+};
+
+/** Onde assistir ao título no Brasil, separado por forma de acesso. */
+export type TitleProviders = {
+  /** Página do TMDB/JustWatch com todas as opções da região. */
+  link: string | null;
+  /** Incluído na assinatura, de graça ou com anúncios. */
+  streaming: WatchProvider[];
+  aluguel: WatchProvider[];
+  compra: WatchProvider[];
+};
+
 /** Dados completos exibidos na página de detalhes. */
 export type TitleDetail = TitleSummary & {
   overview: string;
   genres: string[];
   cast: string[];
+  /** `null` quando o TMDB não tem informação de streaming para o Brasil. */
+  providers: TitleProviders | null;
 };
 
 /** Avaliação feita pelo usuário e guardada no navegador. */

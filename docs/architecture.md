@@ -18,6 +18,8 @@ src/
 │   │   └── ListsLayout.tsx
 │   ├── TitleCard.tsx
 │   ├── TitleCardSkeleton.tsx
+│   ├── WhereToWatch.tsx
+│   ├── WhereToWatchSkeleton.tsx
 │   ├── TitleDetailsSkeleton.tsx
 │   ├── SearchBar.tsx
 │   ├── RatingStars.tsx
@@ -48,7 +50,7 @@ src/
 |---|---|---|
 | Home | `/` | Descobrir filmes e séries populares (F01) |
 | SearchResults | `/buscar?q=termo` | Exibir os resultados da busca por título (F01) |
-| TitleDetails | `/titulo/:mediaType/:id` | Detalhes do título, avaliação (F02) e adição a listas (F03) |
+| TitleDetails | `/titulo/:mediaType/:id` | Detalhes do título, onde assistir (F04), avaliação (F02) e adição a listas (F03) |
 | Lists | `/listas` | Criar e ver todas as listas personalizadas (F03) |
 | ListDetails | `/listas/:listId` | Ver e gerenciar os títulos de uma lista (F03) |
 | Profile | `/perfil` | Ver o histórico de avaliações do usuário (F02) |
@@ -70,9 +72,11 @@ A navegação muda conforme a largura da tela: no desktop os links ficam no `Hea
 | TitleCard | Card de um filme/série: pôster, nome, ano, tipo e nota do TMDB | `title: TitleSummary`, `onQuickToggle?: (title) => void`, `isAdded?: boolean`, `onRemove?: () => void` |
 | RatingStars | Seletor/exibição da nota do usuário (0,5 a 5 estrelas, com meia estrela) | `value: number`, `onChange?: (nota) => void`, `readOnly?: boolean` |
 | ListPicker | Marca em quais listas o título está e permite criar uma nova | `title: TitleSummary` |
+| WhereToWatch | Serviços de streaming do título no Brasil, agrupados por forma de acesso | `providers: TitleProviders \| null` |
 | EmptyState | Mensagem de estado vazio ou de erro, com ação opcional | `title`, `description`, `actionLabel?`, `onAction?`, `variant?: "vazio" \| "erro"` |
 | TitleCardSkeleton | Placeholder animado com o mesmo formato do `TitleCard` | — |
 | TitleDetailsSkeleton | Placeholder animado com o mesmo formato da página de detalhes | — |
+| WhereToWatchSkeleton | Placeholder animado da seção de streaming, usado enquanto o TMDB responde | — |
 
 `TitleCard` navega usando `<Link>`, para que o card funcione como um link de verdade (abrir em nova aba, por exemplo). O botão `onQuickToggle` é o "+" da Referência 01: coloca o título na lista padrão "Quero assistir" e, se ele já estiver lá, tira — o mesmo botão faz as duas coisas, e o ícone vira um "X" ao passar o mouse para avisar disso. Já `onRemove` é o botão de lixeira usado na página de uma lista.
 
@@ -101,7 +105,7 @@ As avaliações e as listas guardam uma cópia dos dados do título (`TitleSumma
 |---|---|---|
 | Buscar populares | Ao montar `Home` | `fetch` em `/movie/popular` e `/tv/popular` do TMDB |
 | Buscar por termo | Ao montar `SearchResults` e quando o `q` da URL muda | `fetch` em `/search/multi` do TMDB |
-| Buscar detalhes | Ao montar `TitleDetails` e quando `:mediaType`/`:id` mudam | `fetch` em `/movie/:id` ou `/tv/:id` com `append_to_response=credits` |
+| Buscar detalhes | Ao montar `TitleDetails` e quando `:mediaType`/`:id` mudam | `fetch` em `/movie/:id` ou `/tv/:id` com `append_to_response=credits,watch/providers`, trazendo detalhes, elenco e streaming de uma vez |
 | Preencher o formulário de avaliação | Ao montar `TitleDetails` e ao trocar de título | Copia a nota e o comentário já salvos para o estado do formulário. Depende do título e da carga inicial, e não de `reviews`: depois de aberto, quem manda no conteúdo do formulário é o usuário |
 | Carregar dados salvos | Ao montar o `AppDataProvider` | Lê avaliações e listas do `localStorage` |
 | Salvar dados | Sempre que avaliações ou listas mudam | Grava o estado atual no `localStorage` |

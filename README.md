@@ -11,17 +11,19 @@ Projeto do **CP1 2º trimestre de WebDev (FIAP)**.
 
 ## Problema selecionado
 
-Dos problemas propostos no enunciado, o TV Clone ataca três:
+Dos problemas propostos no enunciado, o TV Clone ataca quatro:
 
 1. **Descobrir o que assistir:** a pessoa não sabe o que ver e não tem um lugar único para explorar o que está em alta.
 2. **Registrar opiniões e avaliações:** sem o TV Time, não há onde guardar a nota e o que se achou de cada título.
 3. **Criar listas personalizadas:** falta um lugar para separar o que se quer assistir depois.
+4. **Localizar plataformas de streaming:** descobrir um título resolve pouco se a pessoa não sabe onde ele está disponível.
 
 ## Solução proposta
 
 Uma aplicação web onde o usuário:
 
 - vê os filmes e séries populares do momento e busca por qualquer título;
+- descobre em quais serviços de streaming o título está disponível no Brasil;
 - abre a página de um título e registra sua nota (0,5 a 5 estrelas) e um comentário;
 - organiza títulos em listas que ele mesmo cria, e revê tudo isso no perfil.
 
@@ -45,15 +47,16 @@ Como o projeto não tem backend, as avaliações e listas ficam salvas no `local
 
 - `GET /movie/popular` e `GET /tv/popular`: destaques da Home
 - `GET /search/multi`: busca de filmes e séries
-- `GET /movie/{id}` e `GET /tv/{id}` com `append_to_response=credits`: detalhes, gêneros e elenco
+- `GET /movie/{id}` e `GET /tv/{id}` com `append_to_response=credits,watch/providers`: detalhes, gêneros, elenco e serviços de streaming em uma única requisição
 
-Todas as chamadas usam `language=pt-BR` e são feitas com `fetch` dentro de `useEffect`.
+Todas as chamadas usam `language=pt-BR` e são feitas com `fetch` dentro de `useEffect`. Os dados de onde assistir são da região `BR` e têm origem no JustWatch, creditado na tela.
 
 ## Funcionalidades implementadas
 
 - **F01 - Descoberta:** Home com "Filmes em alta" e "Séries em alta"; busca por nome com a URL compartilhável (`/buscar?q=matrix`); estados de carregando, vazio e erro (com botão de tentar novamente).
 - **F02 - Avaliação:** nota de 0,5 a 5 estrelas (com meia estrela e prévia no hover) e comentário por título, salvos no navegador; o formulário volta preenchido ao reabrir o título e o botão passa a ser "Atualizar avaliação"; histórico completo no perfil.
 - **F03 - Listas:** criação de listas com nome livre; adicionar/remover títulos pelo seletor na página de detalhes; botão "+" nos cards para jogar direto na lista "Quero assistir"; página de cada lista com a contagem e a remoção de itens.
+- **F04 - Onde assistir:** serviços de streaming do título no Brasil, separados entre assinatura, aluguel e compra, com logo, nome e link para todas as opções da região.
 
 Detalhamento e critérios de aceitação em [`docs/requirements.md`](docs/requirements.md); páginas, componentes, estados e efeitos em [`docs/architecture.md`](docs/architecture.md); referências de interface em [`docs/references/references.md`](docs/references/references.md).
 
