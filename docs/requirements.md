@@ -22,6 +22,7 @@ Ao final do projeto, o usuário deve conseguir:
 - Avaliar um filme ou série com nota (0,5 a 5, com meia estrela) e comentário opcional, e ver suas avaliações depois.
 - Criar listas personalizadas e adicionar/remover filmes e séries nelas.
 - Ver em quais serviços de streaming o título está disponível no Brasil.
+- Ver os episódios de uma série por temporada e marcar quais já assistiu.
 
 ## 3. Funcionalidades
 
@@ -94,6 +95,28 @@ Ao final do projeto, o usuário deve conseguir:
 - [ ] Quando o TMDB não tem informação de streaming do título para o Brasil, a seção explica isso em vez de aparecer vazia.
 - [ ] Existe um link para a página do TMDB com todas as opções da região.
 - [ ] A origem dos dados (JustWatch, via TMDB) está indicada na tela.
+
+**Estados:**
+- [x] Inicial
+- [x] Carregando
+- [x] Sucesso
+- [x] Vazio
+- [x] Erro
+
+### F05 — Episódios e acompanhamento
+
+**Descrição:** Na página de detalhes de uma série, o usuário vê as temporadas, pode abrir qualquer uma para ver os episódios e marcar cada episódio como assistido, como na tela de episódios do TV Time (Referência 04).
+
+**Critérios de aceitação:**
+- [ ] A página de uma série lista as temporadas, cada uma com a quantidade de episódios e o ano de estreia.
+- [ ] A primeira temporada já vem aberta; clicar em outra fecha a anterior e abre a escolhida, com animação suave de abertura e fechamento.
+- [ ] Reabrir uma temporada já carregada não refaz a requisição.
+- [ ] Cada episódio aparece com miniatura, número, nome, data de exibição (dd/mm/aaaa) e nota do TMDB.
+- [ ] Os episódios de uma temporada só são buscados quando ela é aberta.
+- [ ] A temporada de especiais (número 0) não é listada.
+- [ ] Páginas de filmes não mostram a seção.
+- [ ] Cada episódio tem um botão que o marca como assistido (check) ou desmarca (olho), e o estado é salvo no navegador.
+- [ ] O cabeçalho da temporada mostra o progresso ("2/10 assistidos") quando há episódios marcados.
 
 **Estados:**
 - [x] Inicial

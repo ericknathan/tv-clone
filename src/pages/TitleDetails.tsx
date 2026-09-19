@@ -5,6 +5,7 @@ import { useLocation, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { EmptyState } from "../components/EmptyState";
+import { EpisodeList } from "../components/EpisodeList";
 import { ListPicker } from "../components/ListPicker";
 import { RatingStars } from "../components/RatingStars";
 import { TitleBackdrop } from "../components/TitleBackdrop";
@@ -212,6 +213,10 @@ export function TitleDetails() {
       </div>
 
       {detalhes ? <WhereToWatch providers={detalhes.providers} /> : <WhereToWatchSkeleton />}
+
+      {detalhes && detalhes.seasons.length > 0 && (
+        <EpisodeList seriesId={detalhes.id} seasons={detalhes.seasons} />
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <form

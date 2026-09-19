@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-As três primeiras referências são prints reais do próprio TV Time (o produto original que estamos recriando), coletados antes do encerramento do app, e justificam os padrões de interface reaproveitados no MVP (descoberta, avaliação e listas). As duas últimas vêm de fora do universo de filmes e séries — Spotify e Netflix — e sustentam decisões visuais e de movimento da aplicação.
+As quatro primeiras referências são prints reais do próprio TV Time (o produto original que estamos recriando), coletados antes do encerramento do app, e justificam os padrões de interface reaproveitados no MVP (descoberta, avaliação e listas). As duas últimas vêm de fora do universo de filmes e séries — Spotify e Netflix — e sustentam decisões visuais e de movimento da aplicação.
 
 ## 2. Referência 01 — Busca de conteúdo
 
@@ -60,13 +60,35 @@ O conceito central de várias listas nomeadas (não só uma "watchlist" genéric
 ### Como será adaptado? (F03 — Listas personalizadas)
 A página `Lists` vai adaptar essa ideia de abas para listas *criadas pelo próprio usuário* (em vez de fixas como "In Progress"/"Completed"), já que não fazemos acompanhamento de episódio a episódio. Cada lista mostra seus títulos com o mesmo card compacto da Referência 01, sem a barra de progresso de episódios (que depende de dado que não coletamos no MVP).
 
-## 5. Padrão presente nas três referências — navegação inferior
+## 5. Referência 04 — Episódios por temporada
+
+### Fonte
+TV Time (app original, tela de episódios de uma série)
+
+### Imagem
+
+![Referência 04](./imagens/referencia-04.webp)
+
+### O que observamos?
+Os episódios aparecem agrupados por temporada, em blocos que abrem e fecham. Cada linha traz a miniatura da cena, o número e o nome do episódio e a data de exibição; à direita, um controle marca se o episódio já foi assistido (check amarelo) ou não (ícone de olho).
+
+### O que vamos aproveitar?
+O agrupamento por temporada em blocos retráteis e o formato da linha do episódio: miniatura + número, nome e data.
+
+### Como foi adaptado? (F05 — Lista de episódios)
+Na página de uma série, o componente `EpisodeList` lista as temporadas com a contagem de episódios e o ano; a primeira já vem aberta e abrir outra fecha a anterior. Os episódios de cada temporada são buscados só quando ela é aberta (`/tv/:id/season/:numero`), então uma série com 8 temporadas não custa 8 requisições ao entrar na página. Cada linha mostra miniatura, número, nome, data em formato brasileiro e a nota do TMDB.
+
+O controle de "assistido" também foi reaproveitado: cada episódio tem um botão que alterna entre o check (assistido) e o olho (não assistido), como no print, e o estado fica salvo no navegador. Em cima disso, o cabeçalho da temporada mostra o progresso ("2/10 assistidos"), que no app original aparece na tela de acompanhamento (Referência 03).
+
+Uma informação a mais em relação ao print: a nota do episódio no TMDB, que já vem na mesma requisição dos episódios.
+
+## 6. Padrão presente nas três referências — navegação inferior
 
 As telas de busca, perfil e acompanhamento (Referências 01, 02 e 03) têm em comum uma barra de navegação fixa no rodapé, com poucos itens representados por ícone + rótulo e o item atual destacado em amarelo.
 
 **Como foi adaptado:** no celular, os links de navegação saem do topo e viram o componente `BottomNav`, fixo na parte de baixo da tela, com Início, Listas e Perfil — a mesma lógica de ícone + rótulo e destaque do item ativo. Como o TV Clone é uma plataforma web (e não um app), a partir de telas maiores essa barra desaparece e a navegação volta para o `Header`, que é o padrão esperado no desktop. O campo de busca fica no `Header` nos dois tamanhos, em vez de ocupar um item da barra inferior como no app original.
 
-## 6. Referência 07 — Spotify (fundo colorido no topo)
+## 7. Referência 07 — Spotify (fundo colorido no topo)
 
 ### Fonte
 Spotify web player, tela de uma playlist (ex.: "Release Radar").
@@ -86,7 +108,7 @@ Na página de detalhes, o componente `TitleBackdrop` usa o banner do título (`b
 
 Consequência conhecida: títulos com banner escuro (Game of Thrones, por exemplo) rendem um tom bem discreto. O Spotify tem o mesmo comportamento com capas escuras, então mantivemos assim em vez de forçar uma cor artificial.
 
-## 7. Referência 08 — Netflix (transição das imagens entre telas)
+## 8. Referência 08 — Netflix (transição das imagens entre telas)
 
 ### Fonte
 Netflix web, tela inicial.

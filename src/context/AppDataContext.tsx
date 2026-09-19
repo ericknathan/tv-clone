@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-import type { MediaType, Review, TitleSummary, UserList } from "../types";
+import type { MediaType, Review, TitleSummary, UserList, WatchedEpisode } from "../types";
 
 const CHAVE_AVALIACOES = "tvclone:avaliacoes";
 const CHAVE_LISTAS = "tvclone:listas";
+const CHAVE_EPISODIOS = "tvclone:episodios";
 
 /** Lista criada automaticamente pelo botão "+" dos cards. */
 const LISTA_PADRAO = "Quero assistir";
@@ -23,6 +24,14 @@ type AppDataContextValue = {
   isTitleInList: (listId: string, mediaType: MediaType, titleId: number) => boolean;
   toggleTitleInDefaultList: (title: TitleSummary) => void;
   isTitleInDefaultList: (mediaType: MediaType, titleId: number) => boolean;
+  watchedEpisodes: WatchedEpisode[];
+  toggleWatchedEpisode: (episodio: {
+    seriesId: number;
+    seasonNumber: number;
+    episodeId: number;
+  }) => void;
+  isEpisodeWatched: (episodeId: number) => boolean;
+  countWatchedInSeason: (seriesId: number, seasonNumber: number) => number;
 };
 
 const AppDataContext = createContext<AppDataContextValue | null>(null);
@@ -51,12 +60,14 @@ function gravarNoNavegador(chave: string, valor: unknown) {
 export function AppDataProvider({ children }: { children: ReactNode }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [lists, setLists] = useState<UserList[]>([]);
+  const [watchedEpisodes, setWatchedEpisodes] = useState<WatchedEpisode[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Carrega as avaliações e listas salvas quando a aplicação abre.
   useEffect(() => {
     setReviews(lerDoNavegador<Review>(CHAVE_AVALIACOES));
     setLists(lerDoNavegador<UserList>(CHAVE_LISTAS));
+    setWatchedEpisodes(lerDoNavegador<WatchedEpisode>(CHAVE_EPISODIOS));
     setIsLoaded(true);
   }, []);
 
@@ -70,6 +81,11 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     if (!isLoaded) return;
     gravarNoNavegador(CHAVE_LISTAS, lists);
   }, [lists, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    gravarNoNavegador(CHAVE_EPISODIOS, watchedEpisodes);
+  }, [watchedEpisodes, isLoaded]);
 
   function getReview(mediaType: MediaType, titleId: number) {
     return reviews.find(
@@ -186,6 +202,34 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  /** Marca ou desmarca um episódio como assistido. */
+  function toggleWatchedEpisode(episodio: {
+    seriesId: number;
+    seasonNumber: number;
+    episodeId: number;
+  }) {
+    setWatchedEpisodes((anteriores) => {
+      const jaAssistido = anteriores.some((item) => item.episodeId === episodio.episodeId);
+
+      if (jaAssistido) {
+        return anteriores.filter((item) => item.episodeId !== episodio.episodeId);
+      }
+
+      return [...anteriores, { ...episodio, watchedAt: new Date().toISOString() }];
+    });
+  }
+
+  function isEpisodeWatched(episodeId: number) {
+    return watchedEpisodes.some((item) => item.episodeId === episodeId);
+  }
+
+  /** Quantos episódios de uma temporada já foram marcados. */
+  function countWatchedInSeason(seriesId: number, seasonNumber: number) {
+    return watchedEpisodes.filter(
+      (item) => item.seriesId === seriesId && item.seasonNumber === seasonNumber,
+    ).length;
+  }
+
   function isTitleInDefaultList(mediaType: MediaType, titleId: number) {
     const lista = lists.find((item) => item.name === LISTA_PADRAO);
     if (!lista) return false;
@@ -208,6 +252,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
         isTitleInList,
         toggleTitleInDefaultList,
         isTitleInDefaultList,
+        watchedEpisodes,
+        toggleWatchedEpisode,
+        isEpisodeWatched,
+        countWatchedInSeason,
       }}
     >
       {children}

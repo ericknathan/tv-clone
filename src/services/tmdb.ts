@@ -1,5 +1,7 @@
 import type {
+  Episode,
   MediaType,
+  Season,
   TitleDetail,
   TitleProviders,
   TitleSummary,
@@ -11,6 +13,7 @@ const IMAGE_URL = "https://image.tmdb.org/t/p/w342";
 const LOGO_URL = "https://image.tmdb.org/t/p/w92";
 // A imagem de fundo entra desfocada, então não precisa de resolução alta.
 const BACKDROP_URL = "https://image.tmdb.org/t/p/w780";
+const STILL_URL = "https://image.tmdb.org/t/p/w185";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 /** O TMDB devolve os serviços por país; o TV Clone mostra os do Brasil. */
@@ -47,7 +50,31 @@ type TmdbItem = {
   genres?: { id: number; name: string }[];
   credits?: { cast?: { name: string }[] };
   "watch/providers"?: { results?: Record<string, TmdbRegiao> };
+  seasons?: {
+    id: number;
+    name: string;
+    season_number: number;
+    episode_count?: number;
+    air_date?: string | null;
+  }[];
 };
+
+type TmdbEpisodio = {
+  id: number;
+  episode_number: number;
+  name?: string;
+  air_date?: string | null;
+  still_path?: string | null;
+  vote_average?: number;
+};
+
+/** "2011-04-17" vira "17/04/2011" sem passar por Date, que mudaria o dia por fuso. */
+function paraDataBr(data?: string | null) {
+  if (!data) return "";
+
+  const [ano, mes, dia] = data.split("-");
+  return `${dia}/${mes}/${ano}`;
+}
 
 /** Monta a URL, faz a requisição e transforma os erros em mensagens em português. */
 async function buscarNoTmdb(caminho: string, extras: Record<string, string> = {}) {
@@ -166,5 +193,30 @@ export async function getDetalhes(mediaType: MediaType, id: number): Promise<Tit
     genres: (item.genres || []).map((genero) => genero.name),
     cast: (item.credits?.cast || []).slice(0, 8).map((pessoa) => pessoa.name),
     providers: paraOndeAssistir(item["watch/providers"]?.results?.[REGIAO]),
+    // A temporada 0 é a de especiais, que mistura bastidores e trailers: fica de fora.
+    seasons: (item.seasons || [])
+      .filter((temporada) => temporada.season_number > 0)
+      .map((temporada): Season => ({
+        id: temporada.id,
+        number: temporada.season_number,
+        name: temporada.name,
+        episodeCount: temporada.episode_count || 0,
+        year: (temporada.air_date || "").slice(0, 4),
+      })),
   };
+}
+
+/** Episódios de uma temporada, buscados só quando o usuário abre a temporada. */
+export async function getEpisodios(seriesId: number, seasonNumber: number): Promise<Episode[]> {
+  const dados = await buscarNoTmdb(`/tv/${seriesId}/season/${seasonNumber}`);
+  const itens: TmdbEpisodio[] = dados.episodes || [];
+
+  return itens.map((episodio) => ({
+    id: episodio.id,
+    number: episodio.episode_number,
+    name: episodio.name || "Sem título",
+    airDate: paraDataBr(episodio.air_date),
+    stillUrl: episodio.still_path ? STILL_URL + episodio.still_path : null,
+    voteAverage: episodio.vote_average || 0,
+  }));
 }
